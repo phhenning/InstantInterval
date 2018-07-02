@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">InstantInterval</string>
     <string name="TestButton">TestButton</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="SetSumaryBtEnable">Limit trigger to BT LE"</string>
+    <string name="SetTitleBtEnable">Use Only Pods</string>
+    <string name="SetSumaryNotice">Allow popup notification</string>
+    <string name="SetTitleNotice">Notification</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

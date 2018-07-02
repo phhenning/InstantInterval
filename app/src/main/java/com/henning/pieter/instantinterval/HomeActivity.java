@@ -1,6 +1,7 @@
 package com.henning.pieter.instantinterval;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Notification;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -9,13 +10,19 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +46,7 @@ import android.bluetooth.BluetoothDevice;
 //https://www.pubnub.com/blog/2015-04-15-build-android-beacon-ibeacon-detector/
 //https://www.pubnub.com/blog/2015-04-16-build-android-ibeacon-beacon-emitter/
 public class HomeActivity extends AppCompatActivity {
+//public class HomeActivity extends Activity {
 
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mBluetoothLeScanner;
@@ -66,10 +74,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //        verifyBluetooth();
         mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
@@ -157,6 +168,44 @@ public class HomeActivity extends AppCompatActivity {
 //            return accuracy;
 //        }
 //    }
+
+    private void checckBt() {
+        BluetoothAdapter bluetoothAdapter;
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (bluetoothAdapter == null) {
+//            textInfo.setText("BlueTooth not supported in this device");
+        } else {
+            if (!bluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            }
+            ;
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle app bar item clicks here. The app bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+           case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                // Do nothing
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void setScanFilter() {
         ScanFilter.Builder mBuilder = new ScanFilter.Builder();

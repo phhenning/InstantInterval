@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
+
+
     <TextView
         android:id="@+id/textTop"
         android:layout_width="341dp"

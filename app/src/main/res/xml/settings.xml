@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="podsOnly"
+        android:persistent="true"
+        android:summary="@string/SetSumaryBtEnable"
+        android:title="@string/SetTitleBtEnable"
+        android:visibility="visible" />
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="notifications"
+        android:persistent="true"
+        android:summary="@string/SetSumaryNotice"
+        android:title= "@string/SetTitleNotice"
+        android:visibility="visible" />
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="switch_preference_1"
+        android:title= "TBD" />
+</PreferenceScreen>
