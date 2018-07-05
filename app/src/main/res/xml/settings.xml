@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.SwitchPreferenceCompat
+        <CheckBoxPreference
+            android:key="pref_sync"
+            android:title="title"
+            android:summary="um@string/pref_sync_sm"
+            android:defaultValue="true" />
+
+
+        <!--android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="podsOnly"
         android:persistent="true"
@@ -18,5 +25,5 @@
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="switch_preference_1"
-        android:title= "TBD" />
+        android:title= "TBD" /-->
 </PreferenceScreen>
