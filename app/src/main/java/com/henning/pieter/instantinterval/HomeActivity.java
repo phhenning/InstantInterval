@@ -10,7 +10,10 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
@@ -38,14 +42,28 @@ import android.bluetooth.BluetoothDevice;
 //https://www.pubnub.com/blog/2015-04-14-building-android-beacon-android-ibeacon-tutorial-overview/
 //https://www.pubnub.com/blog/2015-04-15-build-android-beacon-ibeacon-detector/
 //https://www.pubnub.com/blog/2015-04-16-build-android-ibeacon-beacon-emitter/
-public class HomeActivity extends AppCompatActivity {
-//public class HomeActivity extends Activity {
-
+public class HomeActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static final String KEY_PREF_SYNC_CONN = "pref_syncConnectionType";
+    public static final String KEY_PREF_BT_FILTER = "pref_btFilter";
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mBluetoothLeScanner;
     private ScanFilter mScanFilter;
     private ScanSettings mScanSettings;
     private static final Logger logger =  Logger.getLogger( HomeActivity.class.getName() );
+    SharedPreferences sharedPref;
+    boolean btFilter;
+
+
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(KEY_PREF_BT_FILTER)) {
+            System.out.printf("Filter Bluetooth changed " + key);
+            btFilter = sharedPref.getBoolean("pref_btFilter", true);
+            Toast.makeText(getApplicationContext(), "CLICK " + btFilter, Toast.LENGTH_SHORT).show();
+        }
+    }
+//public class HomeActivity extends Activity {
+
 
     protected ScanCallback mScanCallback = new ScanCallback() {
         @Override
@@ -79,14 +97,10 @@ public class HomeActivity extends AppCompatActivity {
                 .replace(android.R.id.content, new SettingsFragment ())
                 .commit();
 
-//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-////        verifyBluetooth();
-//        mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-//        setScanFilter();
-//        setScanSettings();
-//
-////        mBluetoothLeScanner.startScan(Arrays.asList(mScanFilter), mScanSettings, mScanCallback);
-//        mBluetoothLeScanner.startScan( mScanCallback);
+//        checkBt();
+         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+         btFilter = sharedPref.getBoolean("pref_btFilter", true);
+
 
         final Button button = (Button)findViewById(R.id.buttonId);
         button.setOnClickListener(new View.OnClickListener() {
@@ -167,19 +181,31 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private void checckBt() {
-        BluetoothAdapter bluetoothAdapter;
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private void checkBt() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            System.out.printf("No Bluetooth");
 
-        if (bluetoothAdapter == null) {
-//            textInfo.setText("BlueTooth not supported in this device");
         } else {
-            if (!bluetoothAdapter.isEnabled()) {
+            if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, 1);
             }
-            ;
 
+            mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+            enableBtScan();
+        }
+    }
+
+    private void enableBtScan(){
+        setScanSettings();
+        btFilter = sharedPref.getBoolean("pref_btFilter", true);
+        System.out.printf("Filter Bluetooth " + btFilter);
+        if (btFilter) {
+            setScanFilter();
+            mBluetoothLeScanner.startScan(Arrays.asList(mScanFilter), mScanSettings, mScanCallback);
+        } else {
+            mBluetoothLeScanner.startScan(mScanCallback);
         }
     }
 

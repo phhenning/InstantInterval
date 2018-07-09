@@ -1,21 +1,27 @@
-package com.henning.pieter.instantinterval;
-
+package com.henning.pieter.insstantinterval;
 
 import android.os.Bundle;
+import android.preference.SwitchPreference;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SettingsFragment extends android.preference.PreferenceFragment {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // Load the preferences from an XML resource
+            addPreferencesFromResource(R.xml.pref_settings);
 
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.settings);
-    }
+             /*
+            SwitchPreference
+                This preference will store a boolean into the SharedPreferences.
+        */
+
+            // Get the preference widgets reference
+//            https://android--code.blogspot.com/2017/11/android-switchpreference.html final SwitchPreference onOffRandomColor = (SwitchPreference) findPreference(R.xml.pref_settings);
+
+
+        }
 
 //    @Override
 //    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -31,4 +37,5 @@ public class SettingsFragment extends android.preference.PreferenceFragment {
 //        return textView;
 //    }
 
-}
+    }
+

@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <CheckBoxPreference
-            android:key="pref_sync"
-            android:title="title"
-            android:summary="um@string/pref_sync_sm"
-            android:defaultValue="true" />
+    <!--RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.henning.pieter.instantinterval.SettingsActivity">
 
 
-        <!--android.support.v7.preference.SwitchPreferenceCompat
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout-->
+    <RelativeLayout
+        android:id="@+id/cantainer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:layout_gravity="center"/>
+
+    <SwitchPreference
         android:defaultValue="true"
-        android:key="podsOnly"
+        android:key="pref_btFilter"
         android:persistent="true"
         android:summary="@string/SetSumaryBtEnable"
         android:title="@string/SetTitleBtEnable"
         android:visibility="visible" />
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <SwitchPreference
         android:defaultValue="false"
         android:key="notifications"
         android:persistent="true"
         android:summary="@string/SetSumaryNotice"
         android:title= "@string/SetTitleNotice"
         android:visibility="visible" />
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <SwitchPreference
         android:defaultValue="false"
         android:key="switch_preference_1"
-        android:title= "TBD" /-->
+        android:title= "TBD"
+        />
 </PreferenceScreen>
