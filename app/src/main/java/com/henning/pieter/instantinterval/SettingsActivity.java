@@ -1,4 +1,4 @@
-package com.henning.pieter.insstantinterval;
+package com.henning.pieter.instantinterval;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -21,6 +21,8 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.henning.pieter.instantinterval.R;
 
 import java.util.List;
 

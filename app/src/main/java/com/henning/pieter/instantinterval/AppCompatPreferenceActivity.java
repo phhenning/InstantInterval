@@ -1,4 +1,4 @@
-package com.henning.pieter.insstantinterval;
+package com.henning.pieter.instantinterval;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
