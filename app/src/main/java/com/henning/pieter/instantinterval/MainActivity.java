@@ -184,24 +184,47 @@ public class MainActivity extends AppCompatActivity {
             String mgs = unit.getName() + " : " + String.valueOf(rssi) + " # " + Long.toString(time);
             TextView editText = (TextView) findViewById(R.id.textViewPower);
             editText.setText(mgs);
-            mgs = unit.getName() + " : " + unit.getAddress() + " - " + unit.getType();
-            logger.log(Level.INFO, mgs);
+            mgs = name + " : " + unit.getAddress() + " - " + unit.getType();
+//            logger.log(Level.INFO, mgs);
 
 
             if (points.containsKey(name)) {
+                //logger.log(Level.INFO, "update");
                 PodHistory ph = points.get(name);
                 ph.update(time, rssi);
                 //check for trigger ( power peak detekted )
                 Tag ts = ph.getMax();
                 if (ts != null ){
                     triggers.add(ts);
+                    checkInterval();
                 }
             } else {
-                PodHistory ph = new PodHistory(time, rssi);
+                //logger.log(Level.INFO, "new");
+                PodHistory ph = new PodHistory(name, time, rssi);
                 points.put(name, ph);
             }
         }
     };
+
+
+    private void checkInterval() {
+        int size = triggers.size();
+        if ( size > 1 ) {
+            Tag oldT = triggers.get(size-2);
+            Tag newT = triggers.get(size-1);
+//            logger.log(Level.INFO, "########CHECK##### " +  oldT.id  + "  " + newT.id);
+
+            if ( oldT.id != newT.id){
+                String lable = oldT.id + " " + newT.id;
+                long timeMS = newT.ts - oldT.ts;
+                int sec = (int) timeMS / 1000;
+                int ms = (int)(timeMS % 1000);
+                logger.log(Level.INFO, "@@@ " + lable + ":  " + sec + "." + ms);
+
+            }
+        }
+
+    }
 
 
     private void checkBt() {
@@ -387,41 +410,50 @@ class Tag {
         public long ts;  // timestamp in ms
         public int pwr;
         public int avr; //
+        public String id;
 
-        Tag(long timestamp , int power) {
+        Tag(String id, long timestamp , int power) {
             this.ts = timestamp;
             this.pwr = power;
             this.avr = power;
+            this.id  = id;
         }
 
-        Tag(long timestamp , int power , int avr) {
+        Tag(String id, long timestamp , int power , int avr) {
             this.ts = timestamp;
             this.pwr = power;
             this.avr = avr;
+            this.id  = id;
         }
     }
 
 
 class PodHistory {
+    private static final Logger logger = Logger.getLogger("PH");
     public Tag[] tags = new Tag[5];
     int last = 1;
+    String id;
 
-    PodHistory(long time, int rssi) {
-        tags[0] = new Tag(time, rssi);
+    PodHistory(String id, long time, int rssi) {
+        this.id = id;
+        tags[0] = new Tag(id, time, rssi);
         last = 1;
     }
 
     // newest valye always at 0
     public void update(long time, int rssi) {
+//        logger.log(Level.INFO,"@@@@@ id @@@@ " + id);
+
         // shift tags
         for (int i = last; i >=  1; i--) {
             tags[i] = tags[i - 1];
         }
         int avr = (tags[1].avr + rssi) / 2;
-        tags[0] = new Tag(time, rssi, avr);
+        tags[0] = new Tag(id, time, rssi, avr);
         if (last < 4) {
             last++;
         }
+        logger.log(Level.INFO,(tags[0].id + " : " + tags[0].ts + " " + tags[0].avr));
         System.out.println(tags[0].ts + " " + tags[0].avr);
         //isMax();
     }

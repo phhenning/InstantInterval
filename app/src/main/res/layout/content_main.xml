@@ -63,4 +63,10 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textViewPod"
         app:layout_constraintTop_toBottomOf="@+id/textViewTime" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="368dp"
+        android:layout_height="369dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="126dp" />
 </android.support.constraint.ConstraintLayout>
