@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
-        checkBt();
+//        checkBt();
 
         final Button button = (Button) findViewById(R.id.buttonId);
         button.setOnClickListener(new View.OnClickListener() {
@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Thread myThread = null;
-        Runnable runnable = new CountDownRunner();
-        myThread = new Thread(runnable);
-        myThread.start();
+//        Thread myThread = null;
+//        Runnable runnable = new CountDownRunner();
+//        myThread = new Thread(runnable);
+//        myThread.start();
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         //        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS},1);
@@ -373,36 +373,36 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    public void doWork() {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-                    TextView txtCurrentTime = (TextView) findViewById(R.id.textViewTime);
-                    Calendar c = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                    String strDate = sdf.format(c.getTime());
-                    txtCurrentTime.setText(strDate);
-                } catch (Exception e) {
-                }
-            }
-        });
-    }
+//    public void doWork() {
+//        runOnUiThread(new Runnable() {
+//            public void run() {
+//                try {
+//                    TextView txtCurrentTime = (TextView) findViewById(R.id.textViewTime);
+//                    Calendar c = Calendar.getInstance();
+//                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+//                    String strDate = sdf.format(c.getTime());
+//                    txtCurrentTime.setText(strDate);
+//                } catch (Exception e) {
+//                }
+//            }
+//        });
+//    }
 
-
-    class CountDownRunner implements Runnable {
-        // @Override
-        public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    doWork();
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                } catch (Exception e) {
-                }
-            }
-        }
-    }
+//
+//    class CountDownRunner implements Runnable {
+//        // @Override
+//        public void run() {
+//            while (!Thread.currentThread().isInterrupted()) {
+//                try {
+//                    doWork();
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    Thread.currentThread().interrupt();
+//                } catch (Exception e) {
+//                }
+//            }
+//        }
+//    }
 }
 
 

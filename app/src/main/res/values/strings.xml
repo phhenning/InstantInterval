@@ -1,10 +1,12 @@
 <resources>
-    <string name="app_name">InstantInterval</string>
+    <string name="app_name">Instant Interval</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Main Activity  string  -->
 
-    <string name="TestButton">TestButton</string>
-
+     <string name="TestButton">TestButton</string>
+    <string name="TextPodName">Pod Name</string>
+    <string name="TextRxPower">RX Power</string>
 
     <string name="SetSumaryBtEnable">Limit trigger to BT LE"</string>
     <string name="SetTitleBtEnable">Use Only Pods</string>
