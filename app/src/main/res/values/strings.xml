@@ -4,7 +4,7 @@
 
     <!-- Main Activity  string  -->
 
-     <string name="TestButton">TestButton</string>
+    <string name="TestButton">Test</string>
     <string name="TextPodName">Pod Name</string>
     <string name="TextRxPower">RX Power</string>
 

@@ -12,11 +12,13 @@
     <TextView
         android:id="@+id/textLableName"
         android:layout_width="wrap_content"
-        android:layout_height="18dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/TextPodName"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/textViewPod"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,31 +26,31 @@
     <Button
         android:id="@+id/buttonId"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="46dp"
         android:text="@string/TestButton"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPower"
-        tools:layout_editor_absoluteX="270dp" />
+        app:layout_constraintStart_toStartOf="@+id/textViewPod"
+        tools:layout_editor_absoluteY="2dp" />
 
     <TextView
         android:id="@+id/textViewPod"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="None"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toEndOf="@+id/textLableName"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textLableName" />
 
     <TextView
         android:id="@+id/textViewPower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/TextRxPower"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toEndOf="@+id/textLablePower"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textLablePower" />
 
 
     <TextView
@@ -57,10 +59,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
         android:text="@string/TextRxPower"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toEndOf="@+id/textLableName"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textViewPod" />
 </android.support.constraint.ConstraintLayout>
