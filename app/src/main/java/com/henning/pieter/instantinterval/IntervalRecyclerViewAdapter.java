@@ -7,21 +7,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.henning.pieter.instantinterval.IntervalFragment.OnListFragmentInteractionListener;
-import com.henning.pieter.instantinterval.dummy.DummyContent.DummyItem;
+
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link IntervalItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class IntervalRecyclerViewAdapter extends RecyclerView.Adapter<IntervalRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<IntervalItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public IntervalRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public IntervalRecyclerViewAdapter(List<IntervalItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -37,7 +37,10 @@ public class IntervalRecyclerViewAdapter extends RecyclerView.Adapter<IntervalRe
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mStartPodNameView.setText(mValues.get(position).startName);
+        holder.mEndPodNameView.setText(mValues.get(position).endName);
+        holder.mIntervalTimeView.setText(mValues.get(position).time);
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,19 +62,23 @@ public class IntervalRecyclerViewAdapter extends RecyclerView.Adapter<IntervalRe
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mStartPodNameView;
+        public final TextView mIntervalTimeView;
+        public final TextView mEndPodNameView;
+        public IntervalItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = (TextView) view.findViewById(R.id.interval_number);
+            mStartPodNameView = (TextView) view.findViewById(R.id.start_pod_name);
+            mIntervalTimeView = (TextView) view.findViewById(R.id.time);
+            mEndPodNameView = (TextView) view.findViewById(R.id.end_pod_name);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mStartPodNameView.getText() + "'";
         }
     }
 }

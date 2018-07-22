@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.henning.pieter.instantinterval.dummy.DummyContent;
-import com.henning.pieter.instantinterval.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -26,7 +24,7 @@ public class IntervalFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-
+    public static  IntervalRecyclerViewAdapter intervalRecyclerViewAdapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -57,7 +55,6 @@ public class IntervalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interval_list, container, false);
-//        View view = inflater.inflate(R.layout.fragment_interval, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -68,7 +65,8 @@ public class IntervalFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new IntervalRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            intervalRecyclerViewAdapter = new IntervalRecyclerViewAdapter(IntervalListContent.ITEMS, mListener);
+            recyclerView.setAdapter(intervalRecyclerViewAdapter);
         }
         return view;
     }
@@ -103,6 +101,6 @@ public class IntervalFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(IntervalItem item);
     }
 }
