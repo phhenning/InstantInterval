@@ -22,14 +22,13 @@ public class IntervalListContent {
      */
 //    public static final Map<String, IntervalItem> ITEM_MAP = new HashMap<String, IntervalItem>();
 
-    private static final int COUNT = 3;
-
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
-        }
-    }
+//    private static final int COUNT = 3;
+//    static {
+//        // Add some sample items.
+//        for (int i = 1; i <= COUNT; i++) {
+//            addItem(createDummyItem(i));
+//        }
+//    }
 
     private static void addItem(IntervalItem item) {
         ITEMS.add(0,item);

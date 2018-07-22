@@ -66,6 +66,7 @@ public class IntervalFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             intervalRecyclerViewAdapter = new IntervalRecyclerViewAdapter(IntervalListContent.ITEMS, mListener);
+//            recyclerView.smoothScrollToPosition(0);
             recyclerView.setAdapter(intervalRecyclerViewAdapter);
         }
         return view;

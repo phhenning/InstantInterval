@@ -12,6 +12,7 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -33,6 +34,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,12 +59,13 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothLeScanner mBluetoothLeScanner;
     private ScanFilter mScanFilter;
     private ScanSettings mScanSettings;
-    private static final Logger logger = Logger.getLogger("II");
+    private static final Logger logger = Logger.getLogger("MA");
     private static boolean btFilter;
     private SharedPreferences sharedPreferences;
     private boolean sendNoticer;
     private HashMap<String, PodHistory> points = new HashMap<String, PodHistory>();
-    private ArrayList<Tag> triggers  = new ArrayList<Tag>();
+    private ArrayList<Tag> triggers = new ArrayList<Tag>();
+    LogToStorage store = new LogToStorage(new Date().toString());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,24 +88,23 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
-//        checkBt();
+        checkBt();
 
-        final Button button = (Button) findViewById(R.id.buttonId);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Simple", Toast.LENGTH_LONG).show();//display the text of button1
-                sendNotification(v);
-                //sendMessage();
-                //logger.log( Level.INFO,"log button");
-
-                Random rand = new Random();
-                int index = IntervalListContent.ITEMS.size();
-
-                IntervalItem data = new IntervalItem(index+1, String.valueOf(rand.nextInt()), String.valueOf(rand.nextInt()), abs(rand.nextLong()));
-                IntervalListContent.ITEMS.add(0,data);
-                IntervalFragment.intervalRecyclerViewAdapter.notifyItemInserted(0);
-            }
-        });
+//        final Button button = (Button) findViewById(R.id.buttonId);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "Simple", Toast.LENGTH_LONG).show();//display the text of button1
+//                sendNotification(v);
+//                //sendMessage();
+//                //logger.log( Level.INFO,"log button");
+//
+//                Random rand = new Random();
+//                int index = IntervalListContent.ITEMS.size();
+//                IntervalItem data = new IntervalItem(index+1, String.valueOf(rand.nextInt()), String.valueOf(rand.nextInt()), abs(rand.nextLong()));
+//                IntervalListContent.ITEMS.add(0,data);
+//                IntervalFragment.intervalRecyclerViewAdapter.notifyItemInserted(0);
+//            }
+//        });
 
 //        Thread myThread = null;
 //        Runnable runnable = new CountDownRunner();
@@ -188,10 +192,21 @@ public class MainActivity extends AppCompatActivity {
             String name = unit.getName();
 
             String mgs = unit.getName() + " : " + String.valueOf(rssi) + " # " + Long.toString(time);
-            TextView editText = (TextView) findViewById(R.id.textViewPower);
-            editText.setText(mgs);
-            mgs = name + " : " + unit.getAddress() + " - " + unit.getType();
+            TextView podName = (TextView) findViewById(R.id.textViewPod);
+            TextView podPwr = (TextView) findViewById(R.id.textViewPower);
+
+
+            podName.setText(name);
+            podPwr.setText(rssi + " dB");
+            mgs = name + " \t:\t " + rssi + " \t time \t" +  Long.toString(time);
+//            mgs = name + " : " + unit.getAddress() + " - " + unit.getType();
 //            logger.log(Level.INFO, mgs);
+
+            try{
+                store.addToFile(mgs);
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "file weirte" + e.getMessage());
+            }
 
 
             if (points.containsKey(name)) {
@@ -200,7 +215,8 @@ public class MainActivity extends AppCompatActivity {
                 ph.update(time, rssi);
                 //check for trigger ( power peak detekted )
                 Tag ts = ph.getMax();
-                if (ts != null ){
+
+                if (ts != null) {
                     triggers.add(ts);
                     checkInterval();
                 }
@@ -213,19 +229,26 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
+
     private void checkInterval() {
         int size = triggers.size();
         if ( size > 1 ) {
             Tag oldT = triggers.get(size-2);
             Tag newT = triggers.get(size-1);
-//            logger.log(Level.INFO, "########CHECK##### " +  oldT.id  + "  " + newT.id);
+            String msg = "########CHECK##### \t" +  oldT.id  + "  \t" + newT.id + "\t" + Long.toString(newT.ts - oldT.ts);
+            logger.log(Level.INFO, msg);
+            try{
+                store.addToFile(msg);
+            } catch (Exception e) {
 
+            }
             if ( oldT.id != newT.id){
-                String lable = oldT.id + " " + newT.id;
                 long timeMS = newT.ts - oldT.ts;
-                int sec = (int) timeMS / 1000;
-                int ms = (int)(timeMS % 1000);
-                logger.log(Level.INFO, "@@@ " + lable + ":  " + sec + "." + ms);
+                int index = IntervalListContent.ITEMS.size();
+                IntervalItem data = new IntervalItem(index+1, oldT.id,newT.id, timeMS);
+                IntervalListContent.ITEMS.add(0,data);
+                IntervalFragment.intervalRecyclerViewAdapter.notifyItemInserted(0);
+
 
             }
         }
@@ -414,58 +437,5 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-            //        private E[] array;
-//
-//        public PeakFinder(E[] array){
-//            if(array == null || array.length == 0)
-//                throw new IllegalArgumentException("array cannot be null or 0");
-//            this.array = array;
-//        }
-//
-//        public E find(){
-//            return findUtil(0, array.length - 1);
-//        }
-//
-//        private E findUtil(int left, int right){
-//            int mid = (right - left)/2 + left;
-//            int newLeft = mid + 1;
-//            int newRight = mid - 1;
-//
-//            if(newLeft <= right && array[newLeft].compareTo(array[mid]) > 0)
-//                return findUtil(newLeft, right);
-//            else if(newRight >= left && array[newRight].compareTo(array[mid]) > 0)
-//                return findUtil(left, newRight);
-//            else
-//                return array[mid];
-//        }
-//    }
-
-//import java.util.*;
-//
-//    public class HelloWorld{
-//
-//        public static Map m1 = new HashMap();
-//        public static void main(String []args){
-//            System.out.println("Hello World");
-//            makemap();
-//            System.out.println();
-//            System.out.print("\t" + m1.get("Ayan"));
-//            System.out.print("\t" + m1.containsKey("Ayan"));
-//        }
-//
-//        private static void makemap(){
-//
-//            m1.put("Zara", "8");
-//            m1.put("Mahnaz", "31");
-//            m1.put("Ayan", "12");
-//            m1.put("Daisy", "14");
-//
-//            System.out.println();
-//            System.out.println(" Map Elements");
-//            System.out.print("\t" + m1);
-//        }
-//    }
 
 
