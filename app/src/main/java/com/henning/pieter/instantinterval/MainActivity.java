@@ -3,49 +3,34 @@ package com.henning.pieter.instantinterval;
 import android.Manifest;
 import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
+
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,10 +91,9 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-//        Thread myThread = null;
-//        Runnable runnable = new CountDownRunner();
-//        myThread = new Thread(runnable);
-//        myThread.start();
+        Runnable BackgroundRunnable = new BackGroundRunner();
+        Thread BackgroundThread = new Thread(BackgroundRunnable);
+        BackgroundThread.start();
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         //        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS},1);
@@ -167,42 +151,29 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
+
+    /*
+    //  02 01 1A 1A FF 4C 00 02 15 FD A5 06 93 A4 E2 4F B1 AF CF C6 EB 07 64 78 25 DE AD BE EF C5 0D 09 65 62 65 6F 6F 2D 31 32 42 41 42 43 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    //  ebeoo-12BABC : 20:91:48:12:BA:BC - 3    7936
+    //  02 01 1A 1A FF 4C 00 02 15 FD A5 06 93 A4 E2 4F B1 AF CF C6 EB 07 64 78 25 00 01 00 01 C5 0D 09 65 62 65 6F 6F 2D 30 36 42 30 30 41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    //  ebeoo-06B00A : 20:91:48:06:B0:0A - 3    7936
+     */
     protected ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-//            ScanRecord mScanRecord = result.getScanRecord();
-            // byte[] manufacturerData = mScanRecord.getManufacturerSpecificData(224);
-//            ScanRecord sr = result.getScanRecord();
-//            byte[] mr = sr.getBytes();
-//            StringBuilder data = new StringBuilder();
-//            for(byte b : mr){
-//                data.append(String.format("%02X ", b));
-//            }
-//            logger.log( Level.INFO, data.toString());
-//            I/II: 02 01 1A 1A FF 4C 00 02 15 FD A5 06 93 A4 E2 4F B1 AF CF C6 EB 07 64 78 25 DE AD BE EF C5 0D 09 65 62 65 6F 6F 2D 31 32 42 41 42 43 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-//            I/II: ebeoo-12BABC : 20:91:48:12:BA:BC - 3    7936
-//            I/II: 02 01 1A 1A FF 4C 00 02 15 FD A5 06 93 A4 E2 4F B1 AF CF C6 EB 07 64 78 25 00 01 00 01 C5 0D 09 65 62 65 6F 6F 2D 30 36 42 30 30 41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-//            I/II: ebeoo-06B00A : 20:91:48:06:B0:0A - 3    7936
-
-            long time = System.currentTimeMillis();
-            // RSSI  the received signal strength in dBm. The valid range is [-127, 126].
-            int rssi = result.getRssi();
-
+            // ScanRecord sr = result.getScanRecord();
+            //byte[] mr = sr.getBytes();
+            long timeStampMs = System.currentTimeMillis();
+            int rssi = result.getRssi();             // RSSI  the received signal strength in dBm. The valid range is [-127, 126].
             BluetoothDevice unit = result.getDevice();
             String name = unit.getName();
-
-            String mgs = unit.getName() + " : " + String.valueOf(rssi) + " # " + Long.toString(time);
             TextView podName = (TextView) findViewById(R.id.textViewPod);
             TextView podPwr = (TextView) findViewById(R.id.textViewPower);
-
-
             podName.setText(name);
             podPwr.setText(rssi + " dB");
-            mgs = name + " \t:\t " + rssi + " \t time \t" +  Long.toString(time);
-//            mgs = name + " : " + unit.getAddress() + " - " + unit.getType();
-//            logger.log(Level.INFO, mgs);
 
             try{
+                String mgs = name + " \t"  +  Long.toString(timeStampMs) + rssi + "\n";
                 store.addToFile(mgs);
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "file weirte" + e.getMessage());
@@ -210,9 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (points.containsKey(name)) {
-                //logger.log(Level.INFO, "update");
                 PodHistory ph = points.get(name);
-                ph.update(time, rssi);
+                ph.update(timeStampMs, rssi);
                 //check for trigger ( power peak detekted )
                 Tag ts = ph.getMax();
 
@@ -222,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             } else {
                 //logger.log(Level.INFO, "new");
-                PodHistory ph = new PodHistory(name, time, rssi);
+                PodHistory ph = new PodHistory(name, timeStampMs, rssi);
                 points.put(name, ph);
             }
         }
@@ -235,24 +205,25 @@ public class MainActivity extends AppCompatActivity {
         if ( size > 1 ) {
             Tag oldT = triggers.get(size-2);
             Tag newT = triggers.get(size-1);
-            String msg = "########CHECK##### \t" +  oldT.id  + "  \t" + newT.id + "\t" + Long.toString(newT.ts - oldT.ts);
-            logger.log(Level.INFO, msg);
             try{
+                String msg = "###CHECK## \t" +  oldT.id  + " " + newT.id + "\t" + Long.toString(newT.ts - oldT.ts) + "\n";
+                logger.log(Level.INFO, msg);
                 store.addToFile(msg);
             } catch (Exception e) {
 
             }
             if ( oldT.id != newT.id){
-                long timeMS = newT.ts - oldT.ts;
-                int index = IntervalListContent.ITEMS.size();
-                IntervalItem data = new IntervalItem(index+1, oldT.id,newT.id, timeMS);
-                IntervalListContent.ITEMS.add(0,data);
-                IntervalFragment.intervalRecyclerViewAdapter.notifyItemInserted(0);
-
-
+                long timeMs = newT.ts - oldT.ts;
+                if (timeMs > 0 ) {
+                    int index = IntervalListContent.ITEMS.size();
+                    IntervalItem data = new IntervalItem(index + 1, oldT.id, newT.id, timeMs);
+                    IntervalListContent.ITEMS.add(0, data);
+                    IntervalFragment.intervalRecyclerViewAdapter.notifyItemInserted(0);
+                    String msg = "##Interval### \t" + oldT.id + " " + newT.id + "\t" + Long.toString(timeMs) + "\n";
+                    logger.log(Level.INFO, msg);
+                }
             }
         }
-
     }
 
 
@@ -417,21 +388,49 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
 
-//
-//    class CountDownRunner implements Runnable {
-//        // @Override
-//        public void run() {
-//            while (!Thread.currentThread().isInterrupted()) {
-//                try {
-//                    doWork();
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    Thread.currentThread().interrupt();
-//                } catch (Exception e) {
-//                }
-//            }
-//        }
-//    }
+    // if last update more tnan a seconsago, clear  display
+    public void checkForTagtimeout(){
+        runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    long time = System.currentTimeMillis();
+                    TextView podName = (TextView) findViewById(R.id.textViewPod);
+                    TextView podPwr = (TextView) findViewById(R.id.textViewPower);
+                    String id =  String.valueOf(podName.getText());
+
+                    if (points.containsKey(id)) {
+                        //logger.log(Level.INFO, "update");
+                        PodHistory ph = points.get(id);
+                        Tag tag = ph.tags[0];  // newest timestamp always at 0
+                        if (tag != null){
+                            long ms = tag.ts;  // newest timestamp always at 0
+                            if ((time - ms) > 1000){
+                                podName.setText("");
+                                podPwr.setText("");
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "error in background " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    class BackGroundRunner implements Runnable {
+        // @Override
+        public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    checkForTagtimeout();
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }
 
 

@@ -36,11 +36,20 @@ public class PodHistory {
     // newest tag always at 0
     public Tag getMax() {
         if (last > 2) {
-            if ((tags[2].avr < tags[1].avr) && (tags[0].avr < tags[1].avr)) {
+            if ((tags[2].pwr < tags[1].pwr) && (tags[0].pwr < tags[1].pwr)) {
                 System.out.println("max : " + tags[1].pwr  + " at time " + tags[1].ts);
                 return tags[1];
             }
         }
         return null;
     }
+//    public Tag getMax() {
+//        if (last > 2) {
+//            if ((tags[2].avr < tags[1].avr) && (tags[0].avr < tags[1].avr)) {
+//                System.out.println("max : " + tags[1].pwr  + " at time " + tags[1].ts);
+//                return tags[1];
+//            }
+//        }
+//        return null;
+//    }
 }
